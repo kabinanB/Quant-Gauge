@@ -62,10 +62,6 @@ class Option(ABC):
     def rho(self) -> float:
         pass
 
-    @abstractmethod
-    def summary(self):
-        pass
-
     @staticmethod
     def d1(self) -> float:
         x = np.log(self.s / self.k)
@@ -85,6 +81,24 @@ class Option(ABC):
         d1 = self.d1(self)
         pdf = np.exp(-0.5 * d1 * d1) / (np.sqrt(2 * np.pi))
         return pdf
+
+    def summary(self) -> str:
+        price = self.price()
+        delta = self.delta()
+        gamma = self.gamma()
+        vega = self.vega()
+        theta = self.theta()
+        rho = self.rho()
+
+        string = f"""
+           -----------------------------------------------------------------
+            price   |   delta   |   gamma   |   vega   |   theta   |   rho  
+           -----------------------------------------------------------------
+             {price:.2f}   |   {delta:.2f}    |   {gamma:.2f}   |   {vega:.2f}   |   {theta:.2f}   |   {rho:.2f}
+           -----------------------------------------------------------------
+        """
+
+        return string
 
 
 

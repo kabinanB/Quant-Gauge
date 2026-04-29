@@ -1,5 +1,5 @@
 import numpy as np
-from base import OptionRegistry, Option
+from ..base import OptionRegistry, Option
 
 @OptionRegistry.register("SVIModel", "ECall")
 class SVIModelECall(Option):
@@ -22,7 +22,7 @@ class SVIModelECall(Option):
     def rho(self) -> float:
         pass
 
-    def summary(self):
+    def summary(self) -> str:
         pass
 
 
@@ -47,5 +47,5 @@ class SVIModelEPut(Option):
     def rho(self) -> float:
         pass
 
-    def summary(self):
+    def summary(self) -> str:
         pass

@@ -1,5 +1,5 @@
 import numpy as np
-from base import OptionRegistry, Option
+from ..base import OptionRegistry, Option
 
 
 
@@ -24,7 +24,7 @@ class KouJumpDiffusionModelECall(Option):
     def rho(self) -> float:
         pass
 
-    def summary(self):
+    def summary(self) -> str:
         pass
 
 
@@ -49,5 +49,5 @@ class KouJumpDiffusionModelEPut(Option):
     def rho(self) -> float:
         pass
 
-    def summary(self):
+    def summary(self) -> str:
         pass

@@ -111,7 +111,7 @@ class TestOption:
         theta = call.theta()
 
         assert isinstance(theta, float)
-        assert 6.07854 == pytest.approx(float(theta), rel=1e-3)
+        assert -6.07854 == pytest.approx(float(theta), rel=1e-3)
 
 
     def test_theta_put(self):
@@ -125,7 +125,7 @@ class TestOption:
         theta = put.theta()
 
         assert isinstance(theta, float)
-        assert 0.94190 == pytest.approx(float(theta), rel=1e-3)
+        assert -0.94190 == pytest.approx(float(theta), rel=1e-3)
 
     def test_vega_call(self):
         s = 100.0
@@ -180,3 +180,46 @@ class TestOption:
         assert isinstance(rho, float)
         assert -60.90204 == pytest.approx(float(rho), rel=1e-3)
 
+    def test_summary(self):
+
+        s = 100.0
+        sigma = 0.2
+        r = 0.05
+        k = 108.0
+        t = 1.0
+
+        call = qm.option.blackscholes(type_name="ECall", s=s, sigma=sigma, r=r, k=k, t=t)
+        summary = call.summary()
+
+        assert isinstance(summary, str)
+
+        test_summary = """
+           -----------------------------------------------------------------
+            price   |   delta   |   gamma   |   vega   |   theta   |   rho  
+           -----------------------------------------------------------------
+             6.78   |   0.49    |   0.02   |   39.87   |   -6.08   |   41.83
+           -----------------------------------------------------------------
+        """
+        assert test_summary == summary
+
+    def test_summary_put(self):
+
+        s = 100.0
+        sigma = 0.2
+        r = 0.05
+        k = 108.0
+        t = 1.0
+
+        put = qm.option.blackscholes(type_name="EPut", s=s, sigma=sigma, r=r, k=k, t=t)
+        summary = put.summary()
+
+        assert isinstance(summary, str)
+
+        test_summary = """
+           -----------------------------------------------------------------
+            price   |   delta   |   gamma   |   vega   |   theta   |   rho  
+           -----------------------------------------------------------------
+             9.51   |   -0.51    |   0.02   |   39.87   |   -0.94   |   -60.90
+           -----------------------------------------------------------------
+        """
+        assert test_summary == summary

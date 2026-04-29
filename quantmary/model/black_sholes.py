@@ -40,9 +40,6 @@ class BSEuropeanCall(Option):
         d2 = self.d1(self) - self.sigma * np.sqrt(self.t)
         return self.k * self.t * (np.exp(-self.r*self.t)) * self.cdf(d2)
 
-    def summary(self):
-        pass
-
 @OptionRegistry.register("BS", "EPut")
 class BSEuropeanPut(Option):
     """
@@ -80,6 +77,3 @@ class BSEuropeanPut(Option):
     def rho(self) -> float:
         d2 = self.d1(self) - self.sigma * np.sqrt(self.t)
         return -self.k * self.t * (np.exp(-self.r * self.t)) * self.cdf(-d2)
-
-    def summary(self):
-        pass

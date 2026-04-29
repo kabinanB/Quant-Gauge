@@ -1,6 +1,6 @@
 
 import numpy as np
-from base import OptionRegistry, Option
+from ..base import OptionRegistry, Option
 
 @OptionRegistry.register("MertonJumpDiffusionModel", "ECall")
 class MertonJumpDiffusionModelECall(Option):
@@ -23,7 +23,7 @@ class MertonJumpDiffusionModelECall(Option):
     def rho(self) -> float:
         pass
 
-    def summary(self):
+    def summary(self) -> str:
         pass
 
 
@@ -48,5 +48,5 @@ class MertonJumpDiffusionModelEPut(Option):
     def rho(self) -> float:
         pass
 
-    def summary(self):
+    def summary(self) -> str:
         pass
