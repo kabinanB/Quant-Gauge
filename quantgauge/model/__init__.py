@@ -1,4 +1,4 @@
-# quantmary/model/__init__.py
+# quantgauge/model/__init__.py
 
 
 

@@ -1,14 +1,12 @@
 import pytest
-import quantmary as qm
-from quantmary.base import Option
+import quantgauge as qg
+from quantgauge.base import Option
 import numpy as np
 
 
 class TestOption:
 
     def test_price(self):
-        from quantmary.base import OptionRegistry
-        print(f"DEBUG: Models in registry: {OptionRegistry._models}")
 
         # market & trade data
         s = 100.0
@@ -17,7 +15,7 @@ class TestOption:
         k = 108.0
         t = 1.0
 
-        call = qm.option.blackscholes(type_name="ECall", s=s, sigma=sigma, r=r, k=k, t=t)
+        call = qg.option.blackscholes(type_name="ECall", s=s, sigma=sigma, r=r, k=k, t=t)
         call_price = call.price()
 
 
@@ -36,10 +34,10 @@ class TestOption:
         k = 108.0
         t = 1.0
 
-        call = qm.option.blackscholes(type_name="ECall", s=s, sigma=sigma, r=r, k=k, t=t)
+        call = qg.option.blackscholes(type_name="ECall", s=s, sigma=sigma, r=r, k=k, t=t)
         call_price = call.price()
 
-        put = qm.option.blackscholes(type_name="EPut", s=s, sigma=sigma, r=r, k=k, t=t)
+        put = qg.option.blackscholes(type_name="EPut", s=s, sigma=sigma, r=r, k=k, t=t)
         put_price = put.price()
 
         put_pcp = call_price - s + k * np.exp(-r*t)
@@ -53,7 +51,7 @@ class TestOption:
         k = 108.0
         t = 1.0
 
-        call = qm.option.blackscholes(type_name="ECall", s=s, sigma=sigma, r=r, k=k, t=t)
+        call = qg.option.blackscholes(type_name="ECall", s=s, sigma=sigma, r=r, k=k, t=t)
         delta = call.delta()
 
         assert isinstance(delta, float)
@@ -66,7 +64,7 @@ class TestOption:
         k = 108.0
         t = 1.0
 
-        put = qm.option.blackscholes(type_name="EPut", s=s, sigma=sigma, r=r, k=k, t=t)
+        put = qg.option.blackscholes(type_name="EPut", s=s, sigma=sigma, r=r, k=k, t=t)
         delta = put.delta()
 
         assert isinstance(delta, float)
@@ -80,7 +78,7 @@ class TestOption:
         k = 108.0
         t = 1.0
 
-        call = qm.option.blackscholes(type_name="ECall", s=s, sigma=sigma, r=r, k=k, t=t)
+        call = qg.option.blackscholes(type_name="ECall", s=s, sigma=sigma, r=r, k=k, t=t)
         gamma = call.gamma()
 
         assert isinstance(gamma, float)
@@ -94,7 +92,7 @@ class TestOption:
         k = 108.0
         t = 1.0
 
-        put = qm.option.blackscholes(type_name="EPut", s=s, sigma=sigma, r=r, k=k, t=t)
+        put = qg.option.blackscholes(type_name="EPut", s=s, sigma=sigma, r=r, k=k, t=t)
         gamma = put.gamma()
 
         assert isinstance(gamma, float)
@@ -107,7 +105,7 @@ class TestOption:
         k = 108.0
         t = 1.0
 
-        call = qm.option.blackscholes(type_name="ECall", s=s, sigma=sigma, r=r, k=k, t=t)
+        call = qg.option.blackscholes(type_name="ECall", s=s, sigma=sigma, r=r, k=k, t=t)
         theta = call.theta()
 
         assert isinstance(theta, float)
@@ -121,7 +119,7 @@ class TestOption:
         k = 108.0
         t = 1.0
 
-        put = qm.option.blackscholes(type_name="EPut", s=s, sigma=sigma, r=r, k=k, t=t)
+        put = qg.option.blackscholes(type_name="EPut", s=s, sigma=sigma, r=r, k=k, t=t)
         theta = put.theta()
 
         assert isinstance(theta, float)
@@ -134,7 +132,7 @@ class TestOption:
         k = 108.0
         t = 1.0
 
-        call = qm.option.blackscholes(type_name="ECall", s=s, sigma=sigma, r=r, k=k, t=t)
+        call = qg.option.blackscholes(type_name="ECall", s=s, sigma=sigma, r=r, k=k, t=t)
         vega = call.vega()
 
         assert isinstance(vega, float)
@@ -147,7 +145,7 @@ class TestOption:
         k = 108.0
         t = 1.0
 
-        put = qm.option.blackscholes(type_name="EPut", s=s, sigma=sigma, r=r, k=k, t=t)
+        put = qg.option.blackscholes(type_name="EPut", s=s, sigma=sigma, r=r, k=k, t=t)
         vega = put.vega()
 
         assert isinstance(vega, float)
@@ -160,7 +158,7 @@ class TestOption:
         k = 108.0
         t = 1.0
 
-        call = qm.option.blackscholes(type_name="ECall", s=s, sigma=sigma, r=r, k=k, t=t)
+        call = qg.option.blackscholes(type_name="ECall", s=s, sigma=sigma, r=r, k=k, t=t)
         rho = call.rho()
 
         assert isinstance(rho, float)
@@ -174,7 +172,7 @@ class TestOption:
         k = 108.0
         t = 1.0
 
-        put = qm.option.blackscholes(type_name="EPut", s=s, sigma=sigma, r=r, k=k, t=t)
+        put = qg.option.blackscholes(type_name="EPut", s=s, sigma=sigma, r=r, k=k, t=t)
         rho = put.rho()
 
         assert isinstance(rho, float)
@@ -188,7 +186,7 @@ class TestOption:
         k = 108.0
         t = 1.0
 
-        call = qm.option.blackscholes(type_name="ECall", s=s, sigma=sigma, r=r, k=k, t=t)
+        call = qg.option.blackscholes(type_name="ECall", s=s, sigma=sigma, r=r, k=k, t=t)
         summary = call.summary()
 
         assert isinstance(summary, str)
@@ -210,7 +208,7 @@ class TestOption:
         k = 108.0
         t = 1.0
 
-        put = qm.option.blackscholes(type_name="EPut", s=s, sigma=sigma, r=r, k=k, t=t)
+        put = qg.option.blackscholes(type_name="EPut", s=s, sigma=sigma, r=r, k=k, t=t)
         summary = put.summary()
 
         assert isinstance(summary, str)

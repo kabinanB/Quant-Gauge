@@ -1,11 +1,11 @@
 import pytest
-import quantmary as qm
-from quantmary.model import merton_jd
+import quantgauge as qg
+from quantgauge.model import merton_jd
 import numpy as np
 import pytest
 
 
-class TestKou:
+class TestMerton:
 
     def test_price(self):
         s = 100.0
@@ -18,7 +18,7 @@ class TestKou:
         s_2 = 0.30
         n = 10
 
-        merton_class = qm.option.merton(type_name="ECall", s=s, sigma=sigma, r=r, k=k, t=t, lam=lam, m=m, s_2=s_2, n=n)
+        merton_class = qg.option.merton(type_name="ECall", s=s, sigma=sigma, r=r, k=k, t=t, lam=lam, m=m, s_2=s_2, n=n)
         price = merton_class.price()
 
 

@@ -1,5 +1,4 @@
 from .base import OptionRegistry
-import quantmary.model.black_sholes
 
 def blackscholes(type_name: str, s: float, sigma: float, r: float, k: float, t: float):
     """
