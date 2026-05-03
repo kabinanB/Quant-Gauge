@@ -1,29 +1,28 @@
-cmake_minimum_required(VERSION 3.12)
-project(quantgauge)
+cmake_minimum_required(VERSION 3.15) # 3.15+ is highly recommended for modern Python discovery
+project(quantgauge LANGUAGES CXX)
 
-find_package(Python REQUIRED COMPONENTS Interpreter Development)
+# 1. Use the modern FindPython module.
+# Development.Module is specifically for creating .so/.pyd files.
+find_package(Python REQUIRED COMPONENTS Interpreter Development.Module)
 
-execute_process(
-    COMMAND "${Python_EXECUTABLE}" -m pybind11 --cmakedir
-    OUTPUT_VARIABLE pybind11_DIR
-    OUTPUT_STRIP_TRAILING_WHITESPACE
-)
+# 2. Simplified pybind11 discovery.
+# scikit-build-core and cibuildwheel provide pybind11 in a way that
+# find_package(pybind11) can usually find it automatically.
+find_package(pybind11 REQUIRED)
 
-find_package(pybind11 REQUIRED PATHS "${pybind11_DIR}" NO_DEFAULT_PATH)
-
-# Build all three modules
+# 3. Build the modules using the standard pybind11 function
 pybind11_add_module(merton_cpp "quantgauge/model/merton_cpp.cpp")
 pybind11_add_module(kou_cpp "quantgauge/model/kou_cpp.cpp")
 
-# Set output directory to quantgauge/model (not a Release subfolder)
-set_target_properties(merton_cpp kou_cpp PROPERTIES
-    LIBRARY_OUTPUT_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/quantgauge/model"
-    LIBRARY_OUTPUT_DIRECTORY_RELEASE "${CMAKE_CURRENT_SOURCE_DIR}/quantgauge/model"
-    LIBRARY_OUTPUT_DIRECTORY_DEBUG "${CMAKE_CURRENT_SOURCE_DIR}/quantgauge/model"
-)
+# 4. Handle Output Directories.
+# We remove the hardcoded local paths for the CI/CD build.
+# scikit-build-core will handle moving these into the right place for the wheel.
+if(NOT SKBUILD)
+    set_target_properties(merton_cpp kou_cpp PROPERTIES
+        LIBRARY_OUTPUT_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/quantgauge/model"
+        LIBRARY_OUTPUT_DIRECTORY_RELEASE "${CMAKE_CURRENT_SOURCE_DIR}/quantgauge/model"
+    )
+endif()
 
-# Install to the same location
-install(TARGETS merton_cpp kou_cpp
-    LIBRARY DESTINATION "${CMAKE_CURRENT_SOURCE_DIR}/quantgauge/model"
-    RUNTIME DESTINATION "${CMAKE_CURRENT_SOURCE_DIR}/quantgauge/model"
-)
+# 5. Standard Install (Required for wheels)
+install(TARGETS merton_cpp kou_cpp LIBRARY DESTINATION quantgauge/model)
