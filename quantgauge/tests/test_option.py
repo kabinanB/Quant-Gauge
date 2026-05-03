@@ -1,6 +1,5 @@
 import pytest
 import quantgauge as qg
-from quantgauge.base import Option
 import numpy as np
 
 

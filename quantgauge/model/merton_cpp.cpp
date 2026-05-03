@@ -26,10 +26,10 @@ double factorial(int n)
 }
 
 
-class EuropeanCall
+class MertonEuropeanCall
 {
 public:
-	EuropeanCall(double K, double T) :m_K(K), m_T(T){}
+	MertonEuropeanCall(double K, double T) :m_K(K), m_T(T){}
 	double BSAnalyticalPrice(double S0, double sigma, double r) const
 	{
 		const double d_plus = (log(S0 / m_K) + (r + sigma * sigma / 2.0) * m_T) / sigma / sqrt(m_T);
@@ -43,7 +43,7 @@ private:
 
 };
 
-double EuropeanCall::JDAnalyticalPrice(double S0, double sigma, double r, double lambda, double m, double s, double n) const
+double MertonEuropeanCall::JDAnalyticalPrice(double S0, double sigma, double r, double lambda, double m, double s, double n) const
 {
 	const double k = exp(m + pow(s, 2) * 0.5) - 1;
 	const double lambda_dsh = lambda * (1 + k);
@@ -69,8 +69,8 @@ double EuropeanCall::JDAnalyticalPrice(double S0, double sigma, double r, double
 // --- 2. The Module Registration ---
 PYBIND11_MODULE(merton_cpp, m) {
     // Register the Base
-    py::class_<EuropeanCall>(m, "EuropeanCall").def(py::init<double, double>())
-                                               .def("JDAnalyticalPrice", &EuropeanCall::JDAnalyticalPrice,
+    py::class_<MertonEuropeanCall>(m, "MertonEuropeanCall").def(py::init<double, double>())
+                                               .def("JDAnalyticalPrice", &MertonEuropeanCall::JDAnalyticalPrice,
                                                py::arg("S"), py::arg("sigma"), py::arg("r"),
                                                py::arg("lam"), py::arg("m"), py::arg("s"), py::arg("n"));
 }

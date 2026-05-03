@@ -300,7 +300,11 @@ PYBIND11_MODULE(kou_cpp, m) {
              py::arg("n"));
 
     // Register the Concrete Child
-    py::class_<EuropeanCall, EuropeanOption>(m, "EuropeanCall")
+    py::class_<EuropeanCall, EuropeanOption>(m, "KouEuropeanCall")
+        .def(py::init<double, double>());
+
+    // Register the Concrete Child for Put
+    py::class_<EuropeanPut, EuropeanOption>(m, "KouEuropeanPut")
         .def(py::init<double, double>());
 
     // REGISTER THE FACTORY SO PYTHON CAN CALL IT

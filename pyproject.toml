@@ -1,0 +1,16 @@
+[project]
+name = "quantgauge"
+version = "0.1.2" # BUMP THIS VERSION or TestPyPI will reject it
+
+[tool.scikit-build]
+cmake.version = ">=3.15"
+wheel.install-dir = "quantgauge"
+
+[tool.scikit-build.sdist]
+# We must include the build configuration files explicitly
+include = [
+    "pyproject.toml",
+    "CMakeLists.txt",
+    "README.md",
+    "quantgauge/**"
+]

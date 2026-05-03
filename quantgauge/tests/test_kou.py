@@ -1,7 +1,5 @@
-import pytest
 import quantgauge as qg
-from quantgauge.model import kou_jd
-import numpy as np
+
 
 
 class TestKou:

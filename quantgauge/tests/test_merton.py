@@ -1,7 +1,4 @@
-import pytest
 import quantgauge as qg
-from quantgauge.model import merton_jd
-import numpy as np
 import pytest
 
 
