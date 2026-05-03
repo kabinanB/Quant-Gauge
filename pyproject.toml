@@ -1,6 +1,23 @@
+[build-system]
+requires = ["scikit-build-core", "pybind11"]
+build-backend = "scikit_build_core.build"
+
 [project]
 name = "quantgauge"
-version = "0.1.2" # BUMP THIS VERSION or TestPyPI will reject it
+version = "0.1.5"
+description = "Quantitative finance library with C++ backends"
+readme = "README.md"
+requires-python = ">=3.9"
+authors = [
+    {name = "Kabinan", email = "bkabinan@gmail.com"}
+]
+dependencies = [
+    "numpy",
+    "scipy",
+    "pytest",
+    "matplotlib"
+
+]
 
 [tool.scikit-build]
 cmake.version = ">=3.15"

@@ -2,8 +2,8 @@ name: Build and Upload Wheels
 
 on:
   push:
-    tags:
-      - 'v*' # Run when you push a tag like v0.1.5
+    branches: [ "main" ]  # Now it runs on every push
+  workflow_dispatch:      # This adds a "Run workflow" button to the UI
 
 jobs:
   build_wheels:

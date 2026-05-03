@@ -3,9 +3,9 @@
 from . import model
 
 # Import model classes to trigger @register decorators
-from .model import merton_jd, kou_jd
+from .model import merton_jd, kou_jd, black_scholes
 
 # Then import option API
 from . import option
 
-__all__ = ['option', 'model', 'merton_jd', 'kou_jd']
+__all__ = ['option', 'model', 'merton_jd', 'kou_jd', 'black_scholes']
