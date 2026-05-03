@@ -223,3 +223,4 @@ class TestOption:
            -----------------------------------------------------------------
         """
         assert test_summary == summary
+
