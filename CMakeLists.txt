@@ -25,4 +25,4 @@ if(NOT SKBUILD)
 endif()
 
 # 5. Standard Install (Required for wheels)
-install(TARGETS merton_cpp kou_cpp LIBRARY DESTINATION quantgauge/model)
+install(TARGETS merton_cpp kou_cpp LIBRARY DESTINATION model)
