@@ -1,5 +1,4 @@
-import svmodel.svi_impl_vol as svi_impl_vol
-import quantmary.calibration2d as calibration2d
+import svi_impl_vol as svi_impl_vol
 from calibration2d import SVIModel
 import numpy as np
 

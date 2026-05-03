@@ -1,7 +1,9 @@
 import numpy as np
-from svmodel.svi_impl_vol import impl_vol_cal
-from svmodel.sabr_impl_vol import sabr_vol
 from scipy.optimize import minimize
+
+# Use the dot (.) to indicate "look inside the current package"
+from .svmodel.svi_impl_vol import impl_vol_cal
+from .svmodel.sabr_impl_vol import sabr_vol
 
 
 
