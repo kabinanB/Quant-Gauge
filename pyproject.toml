@@ -4,7 +4,7 @@ build-backend = "scikit_build_core.build"
 
 [project]
 name = "quantgauge"
-version = "0.1.11"
+version = "0.1.12"
 description = "Quantitative finance library with C++ backends"
 readme = "README.md"
 requires-python = ">=3.9"
@@ -31,3 +31,10 @@ include = [
     "README.md",
     "quantgauge/**"
 ]
+
+[tool.cibuildwheel]
+# This ensures your Linux wheels work on almost any Ubuntu/Debian/CentOS system
+manylinux-x86_64-image = "manylinux2014"
+
+[tool.cibuildwheel.macos]
+archs = ["x86_64", "arm64"]
