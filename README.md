@@ -5,7 +5,7 @@
 ![CMake](https://img.shields.io/badge/CMake-%3E%3D3.15-brightgreen)
 ![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20Ubuntu%20%7C%20macOS-lightgrey)
 
-# Quant-Gauge
+# Quant-Gauge (DEMO LIBRARY)
 
 A high-performance Python library for derivative pricing using C++.
 
@@ -234,6 +234,8 @@ Quant-Gauge uses:
 **Expanded Model Library:** Implement additional quantitative models and ensure each includes the computation of Greeks (Delta, Gamma, Vega, Theta, and Rho) for risk management.
 
 **Numerical Methods:** Incorporate advanced numerical techniques—such as Monte Carlo simulations, Finite Difference Methods (FDM), and Binomial/Trinomial Trees—to price complex derivatives that lack analytical closed-form solutions.
+
+**Demo Python Library**: I have not yet verified the reliability of the SABR and SVI models; however, I plan to implement comprehensive testing using pytest to ensure their accuracy and stability.
 
 ### Performance Enhancements
 
