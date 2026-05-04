@@ -2,8 +2,12 @@ import numpy as np
 from scipy.optimize import minimize
 
 # Use the dot (.) to indicate "look inside the current package"
-from svmodel.svi_impl_vol import impl_vol_cal
-from svmodel.sabr_impl_vol import sabr_vol
+# Change this:
+# from .svmodel.svi_impl_vol import impl_vol_cal
+
+# To this:
+from quantgauge.svmodel.svi_impl_vol import impl_vol_cal
+from quantgauge.svmodel.sabr_impl_vol import sabr_vol
 
 
 
