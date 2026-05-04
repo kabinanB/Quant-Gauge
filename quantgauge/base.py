@@ -66,7 +66,7 @@ class Option(ABC):
     def d1(self) -> float:
         x = np.log(self.s / self.k)
         y = (self.r + self.sigma * self.sigma / 2) * self.t
-        d1 = (x + y) / (self.sigma * self.t)
+        d1 = (x + y) / (self.sigma * np.sqrt(self.t))
 
         return d1
 

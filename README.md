@@ -53,7 +53,7 @@ option = qg.option.blackscholes(
         s=s, sigma=sigma, r=r, k=k, t=t
 )
 
-price = option.price() # price = 3.173326510281953
+price = option.price() # price = 6.0355636711334455
 ```
 
 ### Merton Jump-Diffusion Model
