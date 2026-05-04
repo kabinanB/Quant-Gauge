@@ -1,22 +1,60 @@
-<img width="1911" height="720" alt="Image Apr 28, 2026, 12_19_17 PM" src="https://github.com/user-attachments/assets/6543ce66-9bca-4d05-a7d7-328afe5679e5" />
+<img width="1717" height="916" alt="Image May 4, 2026, 01_06_50 PM" src="https://github.com/user-attachments/assets/4e078637-4bc9-4d22-8cfc-d09995f5bcf4" />
+
+
+![Python Version](https://img.shields.io/badge/python-%3E%3D3.9-blue)
+![CMake](https://img.shields.io/badge/CMake-%3E%3D3.15-brightgreen)
+![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20Ubuntu%20%7C%20macOS-lightgrey)
 
 # Quant-Gauge
 
-A high-performance Python library for derivative pricing using C++ optimized jump-diffusion models.
+A high-performance Python library for derivative pricing using C++.
 
-## 🚀 Quick Start
+## Quick Start
 
 To install the library, simply run:
-
 ```bash
 pip install quantgauge
 ```
-
-**Note:** Quant-Gauge provides pre-compiled binaries for Windows, Linux (Google Colab), and macOS. No C++ compiler is required on your machine.
+If you are using Google Colab, you can paste this command into a code cell in a new [notebook](https://colab.research.google.com/).
 
 ---
 
-## 🛠️ Usage Example
+## Usage Example of Option Pricing Model
+
+This module implements three option pricing models: Black-Scholes (BS), Merton Jump-Diffusion, and the Kou Double Exponential Jump-Diffusion model. While many other models exist, this module currently focuses on theoretical pricing for European Call and Put options across these three frameworks.
+
+Future updates could expand the library to include various option types and stochastic models, such as:
+
+**Specialized Option Types**
+- Binary Options: Options with fixed payouts based on whether a condition is met.
+- Barrier Options: Path-dependent options that activate or deactivate if the underlying price hits a specific level.
+- Asian Options: Options where the payoff depends on the average price of the underlying asset over a period.
+- American Options: Options that can be exercised at any point before the expiration date.
+
+**Advanced Quantitative Models**
+- Stochastic Volatility Models: The Heston Model or the Stochastic Volatility with Jumps (SVJ) model.
+- Term-Structure Models: Interest rate models such as Hull-White or Vasicek.
+- Black-76: Specifically for pricing options on futures or forward contracts.
+
+### Black-Scholes Model
+
+```python
+import quantgauge as qg
+
+# Define option parameters
+s = 100.0      # Spot price
+k = 105.0      # Strike price
+t = 1.0        # Time to maturity (years)
+r = 0.05       # Risk-free rate
+sigma = 0.15   # Volatility
+
+option = qg.option.blackscholes(
+        type_name="ECall",
+        s=s, sigma=sigma, r=r, k=k, t=t
+)
+
+price = option.price() # price = 3.173326510281953
+```
 
 ### Merton Jump-Diffusion Model
 
@@ -46,7 +84,7 @@ option = qg.option.merton(
 )
 
 price = option.price()
-print(f"Merton Call Price: {price:.4f}")
+print(f"Merton Call Price: {price:.4f}") # Merton Call Price: 13.1094
 ```
 
 ### Kou's Double Exponential Jump-Diffusion Model
@@ -78,12 +116,81 @@ option = qg.option.kou(
 )
 
 price = option.price()
-print(f"Kou Call Price: {price:.4f}")
+print(f"Kou Call Price: {price:.4f}") # Kou Call Price: 7.1370
 ```
+---
+## Usage Example of Implied Volatility Smile Model
 
+Beyond option pricing, I have implemented implied volatility models such as SVI and SABR to calibrate and analyze the volatility smile.
+
+**SVI Model (Stochastic Volatility Inspired)**
+
+The SVI model, developed by Jim Gatheral, is a popular parametric formulation used to fit the implied volatility smile at a single expiration (a vertical slice of the surface).
+- The Math: It maps the total implied variance $w(k, t)$ against the log-strike $k$.
+- Key Parameters: It typically uses five parameters ($a, b, \rho, m, \sigma$) to control the level, orientation, and curvature of the smile.
+- Strength: SVI is highly flexible and is guaranteed to be free of static arbitrage (like "butterfly arbitrage") if calibrated correctly. It is the industry standard for equity index volatility surfaces.
+
+**SABR Model (Stochastic, Alpha, Beta, Rho)**
+
+The SABR model is a dynamic model that describes how the forward price $F$ and its volatility $\alpha$ evolve over time. It is widely used in interest rate derivatives (swaps and swaptions).
+- The Concept: It assumes the volatility of an asset is itself a stochastic process.The Four Parameters:
+    - $\alpha$ (Alpha): The initial volatility level.
+    - $\beta$ (Beta): The "leverage" parameter (determines the relationship between price and volatility).
+    - $\rho$ (Rho): The correlation between the asset price and its volatility.
+    - $\nu$ (Nu): The "volatility of volatility," which dictates the convexity (the "smile").
+- Strength: Its greatest advantage is the ability to predict how the volatility smile will move as the underlying price changes, which is crucial for hedging (calculating "Greeks").
+
+### SABR Model
+```python
+import quantgauge.calibration2d as ca
+
+F, T = 100.0, 1.0
+strikes = np.array([80, 90, 100, 110, 120])
+vols = np.array([0.22, 0.20, 0.18, 0.19, 0.21])
+
+# [alpha, beta, rho, nu]
+initial_guess = [0.15, 0.7, -0.2, 0.3]
+
+# Standard SABR constraints
+sabr_bounds = [ (0.001, None),  # alpha > 0
+  (0.0, 1.0),  # 0 <= beta <= 1
+  (-0.99, 0.99),  # -1 < rho < 1
+  (0.001, None)  # nu > 0
+  ]
+
+model = ca.SABRModel()
+opt_params = model.minimise_sabr(initial_guess, F, T, strikes, vols, sabr_bounds)
+
+```
+### SVI Model
+
+```python
+import quantgauge.calibration2d as ca
+
+bound = [
+        (0.0001, 2.0),  # a: Must be positive
+        (0.0, 1.0),  # b: Must be non-negative
+        (0.0001, 1.0),  # sigma: Must be positive
+        (-0.99, 0.99),  # rho: Must be between -1 and 1
+        (-1.0, 1.0)  # m: Strike offset
+]
+
+# 3. Initial Guess
+initial_guess = [0.1, 0.1, 0.1, 0.0, 0.0]
+
+    # Create a random number generator with a specific seed
+rng = np.random.default_rng(seed=42)
+market_strikes = np.linspace(30, 150, 40)
+market_vols = svi_impl_vol.impl_vol_cal(market_strikes, 0.04, 0.1, 0.1, -0.5, 0) + rng.normal(0, 0.002, 40)
+
+# 4. Run the Optimizer
+model = ca.SVIModel()
+model.minimise(initial_guess, market_strikes, market_vols, bound)
+
+```
 ---
 
-## 📖 Project Motivation
+## Project Motivation
 
 ### Why Quant-Gauge?
 
@@ -103,122 +210,30 @@ Traditional option pricing models like Black-Scholes assume continuous asset pri
 
 ---
 
-## 🎯 Supported Models
-
-### 1. Merton Jump-Diffusion Model
-
-The Merton model extends Black-Scholes by adding **compound Poisson jumps** to the asset price:
-
-```
-dS = μS dt + σS dW + S d(∑J_i)
-```
-
-Where:
-- `μ` = drift rate
-- `σ` = volatility
-- `W` = Brownian motion
-- `∑J_i` = compound Poisson jump process
-
-**Why it matters:** Captures sudden market dislocations while maintaining analytic tractability.
-
-**Parameters:**
-- `lam` (λ): Jump intensity - how often jumps occur
-- `m`: Mean of log jump size
-- `s_2`: Volatility of log jump size
-- `n`: Number of terms for series convergence (accuracy vs speed tradeoff)
-
-### 2. Kou's Double Exponential Jump-Diffusion Model
-
-Kou's model extends Merton by allowing **asymmetric jumps** - different distributions for up and down movements:
-
-```
-dS = μS dt + σS dW + S d(∑Y_i)
-```
-
-Where:
-- `Y_i` follows a double exponential distribution
-- Up jumps: exponential with parameter `η₁`
-- Down jumps: exponential with parameter `η₂`
-
-**Why it matters:** 
-- Captures **volatility smile/smirk** observed in real option markets
-- More realistic for equity index options
-- Allows different decay rates for upside vs downside moves
-
-**Parameters:**
-- `lam` (λ): Jump intensity
-- `p`: Probability of up jump (vs down jump)
-- `eta1`: Decay rate for upward jumps (higher = faster decay)
-- `eta2`: Decay rate for downward jumps
-- `count`: Number of terms for convergence
-
----
-
-## ⚡ Performance Insights
+## Performance Insights
 
 ### C++ Backend Architecture
 
 Quant-Gauge uses:
 
 - **pybind11**: Seamless C++/Python interoperability with zero overhead
-- **Optimized numerical methods**: Confluent hypergeometric functions, rising factorials
 - **Analytical solutions**: Closed-form pricing (no Monte Carlo variance)
 
 ### Why It's Fast
 
 | Aspect | Benefit |
 |--------|---------|
-| **Compiled C++** | 100x+ faster than pure Python NumPy |
-| **No GIL** | True parallelization on multi-core systems |
+| **Compiled C++** | faster than pure Python NumPy |
 | **Analytical pricing** | Instant results, no simulation overhead |
 | **Direct binary** | No compilation step on user machines |
 
-### Benchmark Example
-
-Pricing a single Merton option:
-- **Pure Python (NumPy):** ~500ms
-- **Quant-Gauge (C++):** ~0.5ms
-- **Speedup:** **1000x**
-
 ---
 
-## 📐 Mathematical Foundation
+## Roadmap / Future Work
 
-### Merton Model Pricing Formula
+**Expanded Model Library:** Implement additional quantitative models and ensure each includes the computation of Greeks (Delta, Gamma, Vega, Theta, and Rho) for risk management.
 
-The European call price under Merton's model:
-
-```
-C = Σ(n=0 to ∞) [e^(-λT) (λT)^n / n!] × C_BS(σ_n, r_n)
-```
-
-Where:
-- `σ_n² = σ² + n·ν²/T` (n-th order variance)
-- `r_n = r - λk + n·ln(1+k)/T` (n-th order drift)
-- `k = E[J] - 1` (expected jump size effect)
-
-### Kou Model Pricing Formula
-
-Uses the Upsilon function:
-
-```
-Φ(a) = Σ(n=1 to ∞) π_n · [Σ(k) P(n,k) · I_k + Q(n,k) · I_k]
-```
-
-Where:
-- `P(n,k)`, `Q(n,k)` = combinatorial jump probabilities
-- `I_k` = integral terms with double exponential parameters
-
----
-
-## 🔄 Roadmap / Future Work
-
-### Planned Models
-
-- [ ] **Heston Stochastic Volatility Model** - Capture volatility clustering
-- [ ] **Local Volatility Models** - Fit entire option surfaces
-- [ ] **SABR Model** - Interest rate derivatives
-- [ ] **Bates Model** - Combines Heston + jumps
+**Numerical Methods:** Incorporate advanced numerical techniques—such as Monte Carlo simulations, Finite Difference Methods (FDM), and Binomial/Trinomial Trees—to price complex derivatives that lack analytical closed-form solutions.
 
 ### Performance Enhancements
 
@@ -226,44 +241,15 @@ Where:
 - [ ] **Vectorized Pricing** - Price multiple options in parallel
 - [ ] **Greeks Computation** - Delta, Gamma, Vega, Theta, Rho
 
-### Integration
-
-- [ ] **QuantLib Integration** - Seamless data exchange
-- [ ] **Pandas DataFrame Support** - Price entire option chains at once
-- [ ] **Apache Arrow** - Efficient data serialization
-
 ---
 
-## 🤝 Contributing
-
-Contributions are welcome! Whether you want to:
-
-- 🐛 Fix bugs
-- 🚀 Add new models
-- 📚 Improve documentation
-- ⚡ Optimize performance
-
-**To contribute:**
-
-1. Fork the repository
-2. Create a feature branch: `git checkout -b feature/my-model`
-3. Implement your changes with tests
-4. Submit a pull request
-
-**If you have a model you'd like to see implemented**, please:
-- Open an issue with the model details
-- Include academic references
-- Provide pricing examples or test cases
-
----
-
-## 📄 License
+## License
 
 MIT License - See LICENSE file for details
 
 ---
 
-## 📧 Support
+## Support
 
 For bugs, questions, or feature requests:
 - **GitHub Issues**: [Open an issue](https://github.com/kabinanB/quant-gauge/issues)
@@ -271,13 +257,12 @@ For bugs, questions, or feature requests:
 
 ---
 
-## 🔗 References
+## References
 
 1. **Merton, R. C.** (1976). "Option pricing when underlying stock returns are discontinuous"
 2. **Kou, S. G.** (2002). "A Jump-Diffusion Model for Option Pricing"
 3. **Cont, R. & Tankov, P.** (2004). "Financial Modelling with Jump Processes"
+4. **Gatheral, J & Jacquier, A.** (2012). "Arbitrage-free SVI volatility surfaces"
+5. **Hagan, P. S. & Kumar, D.** (2014). "Arbitrage‐free SABR"
 
----
-
-**Happy pricing!** 📈
 
