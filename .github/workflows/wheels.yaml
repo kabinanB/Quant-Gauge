@@ -37,10 +37,8 @@ jobs:
           path: dist
           merge-multiple: true
 
-      - name: Publish to TestPyPI
+      - name: Publish to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
-          repository-url: https://test.pypi.org/legacy/
-          # You will need to set up "Trusted Publishing" on TestPyPI
-          # or use a password/token secret.
-          password: ${{ secrets.TEST_PYPI_API_TOKEN }}
+            # Removing repository-url defaults it to pypi.org
+          password: ${{ secrets.PYPI_API_TOKEN }}
