@@ -5,7 +5,7 @@
 ![CMake](https://img.shields.io/badge/CMake-%3E%3D3.15-brightgreen)
 ![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20Ubuntu%20%7C%20macOS-lightgrey)
 
-# Quant-Gauge (DEMO LIBRARY)
+# QuantGauge (DEMO LIBRARY)
 
 A high-performance Python library for derivative pricing using C++.
 
@@ -13,7 +13,7 @@ A high-performance Python library for derivative pricing using C++.
 
 To install the library, simply run:
 ```bash
-pip install quantgauge
+!pip install quantgauge
 ```
 If you are using Google Colab, you can paste this command into a code cell in a new [notebook](https://colab.research.google.com/).
 
